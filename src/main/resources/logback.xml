@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" debug="false">
+
+  <!-- Could be prod by default -->
+  <include resource="logback.${LOG_ENV:-local}.xml"/>
+
+</configuration>
+
