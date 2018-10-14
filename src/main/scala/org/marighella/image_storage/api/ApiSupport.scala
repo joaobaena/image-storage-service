@@ -9,12 +9,12 @@ import akka.http.scaladsl.server.{ Directives, RejectionHandler, Route }
 import akka.pattern.CircuitBreaker
 import io.circe.Encoder
 import io.circe.syntax._
-import monix.eval.Task
 import monix.execution.Scheduler
 import monix.execution.misc.NonFatal
 import org.marighella.image_storage.config.ApiConfig
 import org.marighella.image_storage.logging.LoggingSupport
-import org.marighella.image_storage.messages.{ Error, ErrorResponse }
+import org.marighella.image_storage.messages.ErrorResponse
+import org.marighella.image_storage.service.AsyncResult
 import org.marighella.image_storage.utils.CirceJsonSupport
 
 import scala.concurrent.ExecutionContext
@@ -47,8 +47,8 @@ trait ApiSupport extends Directives with LoggingSupport with CirceJsonSupport {
       }
     }
 
-  protected def handleAsyncCall[R](
-    call: => Task[Either[Error, R]]
+  protected def handleServiceCall[R](
+    call: => AsyncResult[R]
   )(onSuccess: R => HttpResponse)(implicit scheduler: Scheduler): Route = {
     val value = call.timeout(config.requestTimeout).runAsync(scheduler)
     onCompleteWithBreaker(routeCircuitBreaker)(value) {
