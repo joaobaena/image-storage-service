@@ -1,26 +1,22 @@
 package org.marighella.image_storage.service
 
-import java.nio.file.Paths
-
+import akka.Done
 import akka.http.scaladsl.server.directives.FileInfo
 import akka.stream.Materializer
-import akka.stream.scaladsl.{ FileIO, Source }
+import akka.stream.scaladsl.{ Source }
 import akka.util.ByteString
+import org.marighella.image_storage.storage.FileStorage
 
 trait FileDownloadService {
-  def storeFile(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
+  def streamDownload(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
     implicit mat: Materializer
-  ): AsyncResult[Boolean]
+  ): AsyncResult[Done]
 }
 
-class ImageDownloadService extends FileDownloadService {
-  override def storeFile(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
+class ImageDownloadService(storage: FileStorage) extends FileDownloadService {
+
+  override def streamDownload(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
     implicit mat: Materializer
-  ): AsyncResult[Boolean] = {
-    val file = Paths.get(metadata.fileName)
-    uploadStream
-      .runWith(FileIO.toPath(file))
-      .asServiceCall
-      .map(_.map(c => c.wasSuccessful))
-  }
+  ): AsyncResult[Done] = uploadStream.runWith(storage.storeFile(metadata))
+
 }

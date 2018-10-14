@@ -25,7 +25,7 @@ class UploadImageRoute(apiConfig: ApiConfig, fileDownloadService: FileDownloadSe
 
   lazy val route: Route =
     uploadFileWithMetadata { (metadata, uploadStream) =>
-      handleServiceCall(fileDownloadService.storeFile(metadata, uploadStream)) { result =>
+      handleServiceCall(fileDownloadService.streamDownload(metadata, uploadStream)) { result =>
         logger.info(s"Successfully stored file ${metadata.fileName}")
         HttpResponse(StatusCodes.OK, entity = HttpEntity(ContentTypes.`application/json`, result.toString))
       }
@@ -44,7 +44,6 @@ class UploadImageRoute(apiConfig: ApiConfig, fileDownloadService: FileDownloadSe
               }
             }
           }
-
         }
       }
     }

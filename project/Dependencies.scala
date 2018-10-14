@@ -1,11 +1,12 @@
 import sbt._
 
 object Dependencies {
-
+  // TODO: Upgrade dependencies version
   object Version {
-    val akka = "2.5.17"
-    val akkaHttp = "10.1.5"
+    val akka = "2.4.19"
+    val akkaHttp = "10.0.9"
     val monix = "2.3.0"
+    val cats = "0.9.0"
     val pureConfig = "0.9.0"
     val circe = "0.8.0"
     val logback = "1.2.3"
@@ -24,6 +25,10 @@ object Dependencies {
     "io.monix" %% "monix-execution" % Version.monix,
     "io.monix" %% "monix-eval" % Version.monix,
     "io.monix" %% "monix-cats" % Version.monix
+  )
+
+  val cats = Seq(
+    "org.typelevel" %% "cats" % Version.cats
   )
 
   val pureConfig = Seq(
