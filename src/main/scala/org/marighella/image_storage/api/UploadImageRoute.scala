@@ -27,13 +27,14 @@ class UploadImageRoute(apiConfig: ApiConfig, fileDownloadService: FileDownloadSe
     uploadFileWithMetadata { (metadata, uploadStream) =>
       handleServiceCall(fileDownloadService.streamDownload(metadata, uploadStream)) { result =>
         logger.info(s"Successfully stored file ${metadata.fileName}")
+        // TODO: Fix sending an 2xx 'early' response before end of request was received
         HttpResponse(StatusCodes.OK, entity = HttpEntity(ContentTypes.`application/json`, result.toString))
       }
     }
 
   private def uploadFileWithMetadata(block: (FileInfo, Source[ByteString, Any]) => Route): Route =
     ignoreTrailingSlash {
-      pathPrefix("image-storage-service" / "api" / "uploadPhoto") {
+      pathPrefix("image-storage-service" / "api" / "upload-photo") {
         path(Segment) { collection =>
           post {
             handleRequest {
