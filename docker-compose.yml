@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+  image-store-service:
+    image: "paulobaena/image-store-service:0.1"
+    hostname: "image-store-service"
+    container_name: "image-store-service"
+    ports:
+      - "8080:8080"
