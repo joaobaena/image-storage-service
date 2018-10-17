@@ -16,10 +16,13 @@
 
     `docker-compose up`
 
+## How to publish docker image to ECR
 
+   `sbt docker:publish`
+   
 ### Upload endpoint
 
-http://localhost:8080/image-storage-service/api/uploadPhoto/[collection]
+http://localhost:8080/image-storage-service/api/upload-photo/[collection]
 
 ### Sample request: 
 
