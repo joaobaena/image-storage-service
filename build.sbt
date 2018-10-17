@@ -7,5 +7,5 @@ lazy val root =
     .enablePlugins(AshScriptPlugin)
     .settings(
       name := "image-store-service",
-      libraryDependencies ++= akka ++ monix ++ pureConfig ++ circe ++ logging ++ scalaTest
+      libraryDependencies ++= akka ++ monix ++ cats ++ awsS3 ++ pureConfig ++ circe ++ logging ++ scalaTest
     )

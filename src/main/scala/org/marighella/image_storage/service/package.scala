@@ -19,4 +19,8 @@ package object service {
         }
   }
 
+  implicit class TaskEither[L, R](val task: Task[Either[L, R]]) extends AnyVal {
+    def tmap[U](f: R => U): Task[Either[L, U]] = task.map(_.map(f))
+  }
+
 }
