@@ -55,7 +55,7 @@ object Common {
         .enablePlugins(JavaServerAppPackaging)
         .settings(
           dockerBaseImage := "openjdk:jre-alpine",
-          dockerRepository := Some("paulobaena"),
+          dockerRepository := Some("520737409608.dkr.ecr.us-east-1.amazonaws.com/marighella"),
           dockerUpdateLatest := true,
           maintainer in Docker := "Paulo Baena <jpbaena@gmail.com>",
           version in Docker := version.value,
