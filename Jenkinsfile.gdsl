@@ -1,0 +1,54 @@
+#!groovy
+
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REPOSITORY = "520737409608.dkr.ecr.us-east-1.amazonaws.com/marighella"
+        BRANCH_NAME = "develop"
+        SBT_HOME = tool name: 'sbt.13.13', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
+        PATH = "${env.SBT_HOME}/bin:${env.PATH}"
+//        DOCKER_LOGIN = sh([script: "aws ecr get-login --no-include-email", returnStdout: true]).trim()
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                checkout scm
+                echo "Starting build"
+                sh "sbt clean generateTag buildInfo test:compile"
+            }
+        }
+        stage('Unit testing') {
+            steps {
+                checkout scm
+                echo 'Unit tests'
+                sh "sbt test"
+            }
+        }
+        stage('Docker: build and publish') {
+            when { anyOf { branch 'develop'; branch 'master'; branch 'feature' } }
+            steps {
+                echo 'Building Docker'
+                withAwsCli([
+                        credentialsId: 'aws-cleclerc-beanstalk',
+                        defaultRegion: 'us-east-1']) {
+                    sh """
+                        aws ecr get-login --no-include-email
+                        export BUILD_ENV=develop
+                        sbt docker:publish generateTag
+                    """
+                }
+            }
+        }
+        stage('Docker: publish develop') {
+            when { anyOf { branch 'Develop' } }
+            steps {
+                echo 'Publishing Docker'
+                export BUILD_ENV=develop
+                export DOCKER_TAG=develop-latest
+
+            }
+        }
+    }
+}
