@@ -4,12 +4,11 @@ import java.nio.file.Paths
 
 import akka.Done
 import akka.http.scaladsl.server.directives.FileInfo
-import akka.stream.scaladsl.{ FileIO, Sink }
-import akka.util.ByteString
+import akka.stream.scaladsl.FileIO
 import org.marighella.image_storage.service._
 
 class LocalFileStorage extends FileStorage {
-  def storeFile(metadata: FileInfo): Sink[ByteString, AsyncResult[Done]] = {
+  override val storeFile: StoreResultFn = (metadata: FileInfo) => {
     val file = Paths.get(metadata.fileName)
     FileIO
       .toPath(file)

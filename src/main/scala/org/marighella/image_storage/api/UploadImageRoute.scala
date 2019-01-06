@@ -5,7 +5,6 @@ import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, HttpResponse, Status
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.FileInfo
 import akka.pattern.CircuitBreaker
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import monix.execution.Scheduler
@@ -14,8 +13,7 @@ import org.marighella.image_storage.service.FileDownloadService
 
 class UploadImageRoute(apiConfig: ApiConfig, fileDownloadService: FileDownloadService)(
   implicit s: Scheduler,
-  actorSystem: ActorSystem,
-  materializer: ActorMaterializer
+  actorSystem: ActorSystem
 ) extends ApiSupport {
 
   override protected val config: ApiConfig = apiConfig
@@ -27,7 +25,6 @@ class UploadImageRoute(apiConfig: ApiConfig, fileDownloadService: FileDownloadSe
     uploadFileWithMetadata { (metadata, uploadStream) =>
       handleServiceCall(fileDownloadService.streamDownload(metadata, uploadStream)) { result =>
         logger.info(s"Successfully stored file ${metadata.fileName}")
-        // TODO: Fix sending an 2xx 'early' response before end of request was received
         HttpResponse(StatusCodes.OK, entity = HttpEntity(ContentTypes.`application/json`, result.toString))
       }
     }

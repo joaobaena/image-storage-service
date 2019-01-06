@@ -8,15 +8,14 @@ import akka.util.ByteString
 import org.marighella.image_storage.storage.FileStorage
 
 trait FileDownloadService {
-  def streamDownload(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
-    implicit mat: Materializer
-  ): AsyncResult[Done]
+  type UploadStreamFn = (FileInfo, Source[ByteString, Any]) => AsyncResult[Done]
+
+  val streamDownload: UploadStreamFn
 }
 
-class ImageDownloadService(storage: FileStorage) extends FileDownloadService {
+class ImageDownloadService(storage: FileStorage)(implicit mat: Materializer) extends FileDownloadService {
 
-  override def streamDownload(metadata: FileInfo, uploadStream: Source[ByteString, Any])(
-    implicit mat: Materializer
-  ): AsyncResult[Done] = uploadStream.runWith(storage.storeFile(metadata))
+  override val streamDownload = (metadata: FileInfo, uploadStream: Source[ByteString, Any]) =>
+    uploadStream.runWith(storage.storeFile(metadata))
 
 }
