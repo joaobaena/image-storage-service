@@ -11,6 +11,7 @@ object Dependencies {
     val awsS3 = "1.8.10.2"
     val pureConfig = "0.9.0"
     val circe = "0.8.0"
+    val elastic4s = "6.3.7"
     val logback = "1.2.3"
     val scalaTest = "3.0.4"
   }
@@ -47,6 +48,10 @@ object Dependencies {
     "io.circe" %% "circe-parser" % Version.circe,
     "io.circe" %% "circe-generic-extras" % Version.circe,
     "de.heikoseeberger" %% "akka-http-circe" % "1.18.1"
+  )
+  
+  val elastic4s = Seq(
+    "com.sksamuel.elastic4s" %% "elastic4s-http" % Version.elastic4s
   )
 
   val logging = Seq(
