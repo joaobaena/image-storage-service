@@ -2,7 +2,7 @@ import Common._
 import Dependencies._
 
 lazy val root =
-  (project in file(".")).commonSettings.scalafmtSettings.dockerSettings
+  (project in file(".")).commonSettings.scalafmtSettings.dockerSettings //.coverageSettings
     .enablePlugins(BuildInfoPlugin)
     .enablePlugins(AshScriptPlugin)
     .settings(

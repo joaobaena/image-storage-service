@@ -5,8 +5,9 @@ import com.lucidchart.sbt.scalafmt.ScalafmtPlugin
 import com.typesafe.sbt.SbtNativePackager.autoImport.maintainer
 import com.typesafe.sbt.packager.archetypes.JavaServerAppPackaging
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+import com.typesafe.sbt.packager.docker.ExecCmd
 import org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyleFailOnError
+import scoverage.ScoverageKeys._
 
 object Common {
   val commonScalacOptions = Seq(
@@ -48,6 +49,25 @@ object Common {
       publishArtifact in (Compile, packageDoc) := false,
       cancelable in Global := true,
       scalastyleFailOnError := true
+    )
+    
+    def coverageSettings: Project = project.settings(
+      coverageMinimum := 90,
+      coverageFailOnMinimum := true,
+      coverageExcludedPackages := {
+        val excludedRegex = Seq (
+          "<empty>",
+          "org.marighella.BuildInfo"
+        )
+        excludedRegex.mkString(";")
+      },
+      coverageExcludedFiles := {
+        val excludedRegex = Seq (
+          "<empty>",
+          ".*/src/test/.*"
+        )
+        excludedRegex.mkString(";")
+      }
     )
 
     def dockerSettings: Project = {
