@@ -1,18 +1,17 @@
 import sbt._
 
 object Dependencies {
-  // TODO: Upgrade dependencies versions
   object Version {
-    val akka = "2.5.13"
+    val akka = "2.5.19"
     val akkaHttp = "10.1.5"
     val alpakka = "1.0-M1"
-    val monix = "2.3.0"
-    val cats = "0.9.0"
+    val monix = "3.0.0-RC2"
+    val cats = "1.5.0"
     val awsS3 = "1.8.10.2"
     val pureConfig = "0.9.0"
-    val circe = "0.8.0"
+    val circe = "0.11.0"
     val logback = "1.2.3"
-    val scalaTest = "3.0.4"
+    val scalaTest = "3.0.5"
   }
 
   val akka = Seq(
@@ -25,14 +24,14 @@ object Dependencies {
   )
 
   val monix = Seq(
-    "io.monix" %% "monix-execution" % Version.monix,
-    "io.monix" %% "monix-eval" % Version.monix,
-    "io.monix" %% "monix-cats" % Version.monix
+    "io.monix" %% "monix" % Version.monix
   )
 
   val cats = Seq(
-    "org.typelevel" %% "cats" % Version.cats
-  )
+    "org.typelevel" %% "cats-core" % Version.cats,
+    "org.typelevel" %% "cats-mtl-core" % "0.4.0",
+    "org.typelevel" %% "cats-effect" % "1.2.0",
+    )
 
   val awsS3 = Seq(
     "com.amazonaws" % "aws-java-sdk" % Version.awsS3
@@ -46,7 +45,7 @@ object Dependencies {
     "io.circe" %% "circe-generic" % Version.circe,
     "io.circe" %% "circe-parser" % Version.circe,
     "io.circe" %% "circe-generic-extras" % Version.circe,
-    "de.heikoseeberger" %% "akka-http-circe" % "1.18.1"
+    "de.heikoseeberger" %% "akka-http-circe" % "1.23.0"
   )
 
   val logging = Seq(

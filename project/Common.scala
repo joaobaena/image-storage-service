@@ -41,7 +41,7 @@ object Common {
     def commonSettings: Project = project.settings(
       version := "0.1",
       organization := "paulo",
-      scalaVersion := "2.12.6",
+      scalaVersion := "2.12.8",
       scalacOptions ++= commonScalacOptions,
       javacOptions ++= Seq("-encoding", "UTF-8"),
       BuildInfo.settings,

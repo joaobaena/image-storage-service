@@ -1,10 +1,10 @@
 package org.marighella.image_storage
 
 import monix.eval.Task
-import monix.execution.misc.NonFatal
 import org.marighella.image_storage.messages.{ ServerStorageError, ServiceError }
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 package object service {
   type AsyncResult[R] = Task[Either[ServiceError, R]]

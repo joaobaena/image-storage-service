@@ -10,7 +10,6 @@ import akka.pattern.CircuitBreaker
 import io.circe.Encoder
 import io.circe.syntax._
 import monix.execution.Scheduler
-import monix.execution.misc.NonFatal
 import org.marighella.image_storage.config.ApiConfig
 import org.marighella.image_storage.logging.LoggingSupport
 import org.marighella.image_storage.messages.ErrorResponse
@@ -19,6 +18,7 @@ import org.marighella.image_storage.utils.CirceJsonSupport
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
+import scala.util.control.NonFatal
 import scala.util.{ Failure, Success }
 
 trait ApiSupport extends Directives with LoggingSupport with CirceJsonSupport {
@@ -50,7 +50,7 @@ trait ApiSupport extends Directives with LoggingSupport with CirceJsonSupport {
   protected def handleServiceCall[R](
     call: => AsyncResult[R]
   )(onSuccess: R => HttpResponse)(implicit scheduler: Scheduler): Route = {
-    val value = call.timeout(config.requestTimeout).runAsync(scheduler)
+    val value = call.timeout(config.requestTimeout).runToFuture(scheduler)
     onCompleteWithBreaker(routeCircuitBreaker)(value) {
       case Success(response) =>
         complete {
